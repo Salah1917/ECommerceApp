@@ -13,16 +13,16 @@ namespace Service
 {
     public class ProductService(IUnitOfWork _unitOfWork, IMapper _mapper) : IProductService
     {
-        public async Task<IEnumerable<ProductBrandDTO>> GetAllBrandsAsync()
-        {
-            var Brands = await _unitOfWork.GetRepository<ProductBrand, int>().GetAllAsync();
-            return _mapper.Map<IEnumerable<ProductBrand>, IEnumerable<ProductBrandDTO>>(Brands);
-        }
-
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
         {
             var Products = await _unitOfWork.GetRepository<Product, int>().GetAllAsync();
             return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(Products);
+        }
+        
+        public async Task<IEnumerable<ProductBrandDTO>> GetAllBrandsAsync()
+        {
+            var Brands = await _unitOfWork.GetRepository<ProductBrand, int>().GetAllAsync();
+            return _mapper.Map<IEnumerable<ProductBrand>, IEnumerable<ProductBrandDTO>>(Brands);
         }
 
         public async Task<IEnumerable<ProductTypeDTO>> GetAllTypesAsync()

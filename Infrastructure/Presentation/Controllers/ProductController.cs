@@ -26,7 +26,7 @@ namespace Presentation.Controllers
 
         #region Get Product By Id
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var Product = await _serviceManager.ProductService.GetProductByIdAsync(id);
@@ -37,9 +37,9 @@ namespace Presentation.Controllers
         #region Get All Types
 
         [HttpGet("Types")]
-        public ActionResult<IEnumerable<ProductTypeDTO>> GetTypes()
+        public async Task<ActionResult<IEnumerable<ProductTypeDTO>>> GetTypes()
         {
-            var Types = _serviceManager.ProductService.GetAllTypesAsync();
+            var Types = await _serviceManager.ProductService.GetAllTypesAsync();
             return Ok(Types);
         }
 
@@ -48,9 +48,9 @@ namespace Presentation.Controllers
         #region Get All Brands
 
         [HttpGet("Brands")]
-        public ActionResult<IEnumerable<ProductBrandDTO>> GetBrands()
+        public async Task<ActionResult<IEnumerable<ProductBrandDTO>>> GetBrands()
         {
-            var Brands = _serviceManager.ProductService.GetAllBrandsAsync();
+            var Brands = await _serviceManager.ProductService.GetAllBrandsAsync();
             return Ok(Brands);
         }
 
