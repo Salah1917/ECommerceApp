@@ -2,12 +2,14 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Presistance.Data;
 using Presistance.Data.DataSeed;
+using Presistance.Repositories;
+using Service;
 
 namespace ECommerceApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,10 @@ namespace ECommerceApp
 
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddAutoMapper(X => X.AddProfile(new MappingProfiles()));
+
             #endregion
 
             builder.Services.AddEndpointsApiExplorer();
@@ -39,7 +45,7 @@ namespace ECommerceApp
 
             var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
 
-            ObjectOfDataSeeding.DataSeed();
+            await ObjectOfDataSeeding.DataSeedAsync();
 
             #endregion
             
