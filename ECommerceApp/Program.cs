@@ -4,6 +4,7 @@ using Presistance.Data;
 using Presistance.Data.DataSeed;
 using Presistance.Repositories;
 using Service;
+using ServiceAbstraction;
 
 namespace ECommerceApp
 {
@@ -30,6 +31,8 @@ namespace ECommerceApp
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddAutoMapper(X => X.AddProfile(new MappingProfiles()));
+
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
             #endregion
 
