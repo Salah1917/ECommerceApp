@@ -34,6 +34,9 @@ namespace ECommerceApp
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
+            builder.Services.AddTransient<PictureUrlResolver>();
+
+
             #endregion
 
             builder.Services.AddEndpointsApiExplorer();
@@ -61,6 +64,7 @@ namespace ECommerceApp
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
