@@ -4,7 +4,9 @@ using DomainLayer.Models;
 using Microsoft.IdentityModel.Tokens;
 using Service.Specifications;
 using ServiceAbstraction;
+using Shared;
 using Shared.DTOS;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +17,9 @@ namespace Service
 {
     public class ProductService(IUnitOfWork _unitOfWork, IMapper _mapper) : IProductService
     {
-        public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync(ProductQueryParams queryParams)
         {
-            var Specifications = new ProductWithBrandAndTypeSpecifications();
+            var Specifications = new ProductWithBrandAndTypeSpecifications(queryParams);
             var Products = await _unitOfWork.GetRepository<Product, int>().GetAllAsync(Specifications);
             return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(Products);
         }

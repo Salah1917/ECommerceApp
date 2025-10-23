@@ -1,10 +1,13 @@
 ﻿using DomainLayer.Models;
+using Shared;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Service.Specifications
 {
@@ -20,5 +23,37 @@ namespace Service.Specifications
             AddInclude(P => P.ProductBrand);
             AddInclude(P => P.ProductType);
         }
-    }
+        public ProductWithBrandAndTypeSpecifications(ProductQueryParams queryParams) 
+            :base(P => (!queryParams.BrandId.HasValue || P.BrandId == queryParams.BrandId)
+            && (!queryParams.TypeId.HasValue || P.TypeId == queryParams.TypeId))
+        {
+            AddInclude(P => P.ProductBrand);
+            AddInclude(P => P.ProductType);
+            #region Sorting
+
+            switch (queryParams.sortingOptions)
+            {
+                case ProductSortingOptions.NameAsc:
+                    AddOrderBy(P => P.Name);
+                    break;
+                case ProductSortingOptions.NameDesc:
+                    AddOrderByDesc(P => P.Name);
+                    break;
+                case ProductSortingOptions.PriceAsc:
+                    AddOrderBy(P => P.Price);
+                    break;
+                case ProductSortingOptions.PriceDesc:
+                    AddOrderBy(P => P.Price);
+                    break;
+                default:
+                    break;
+            }
+            #endregion
+            ApplyPagination(queryParams.PageSize, queryParams.PageIndex);
+
+
+        }
+
+
+        }
 }

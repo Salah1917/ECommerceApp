@@ -21,9 +21,29 @@ namespace Service.Specifications
 
         public List<Expression<Func<TEntity, object>>> IncludeExpression { get; } = [];
 
+
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
         {
             IncludeExpression.Add(includeExpression);
+        }
+        public Expression<Func<TEntity, object>> OrderBy { get; private set; }
+
+        public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
+        public int Take { get; private set; }
+        public int Skip { get; private set; }
+        public bool IsPaginated { get; set; }
+
+        protected void AddOrderBy(Expression<Func<TEntity, object>> OrderByAsc)
+        => OrderBy = OrderByAsc;
+
+        protected void AddOrderByDesc(Expression<Func<TEntity, object>> OrderByDesc)
+        => OrderByDescending = OrderByDesc;
+
+        protected void ApplyPagination(int PageSize, int PageIndex)
+        {
+            IsPaginated = true;
+            Take = PageSize;
+            Skip = (PageIndex - 1) * PageSize;
         }
     }
 }
