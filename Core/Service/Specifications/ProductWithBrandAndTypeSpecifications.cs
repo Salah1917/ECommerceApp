@@ -25,7 +25,8 @@ namespace Service.Specifications
         }
         public ProductWithBrandAndTypeSpecifications(ProductQueryParams queryParams) 
             :base(P => (!queryParams.BrandId.HasValue || P.BrandId == queryParams.BrandId)
-            && (!queryParams.TypeId.HasValue || P.TypeId == queryParams.TypeId))
+            && (!queryParams.TypeId.HasValue || P.TypeId == queryParams.TypeId)
+            && (string.IsNullOrWhiteSpace(queryParams.SearchValue) || P.Name.Contains(queryParams.SearchValue.ToLower())))
         {
             AddInclude(P => P.ProductBrand);
             AddInclude(P => P.ProductType);
@@ -43,7 +44,7 @@ namespace Service.Specifications
                     AddOrderBy(P => P.Price);
                     break;
                 case ProductSortingOptions.PriceDesc:
-                    AddOrderBy(P => P.Price);
+                    AddOrderByDesc(P => P.Price);
                     break;
                 default:
                     break;
@@ -55,5 +56,5 @@ namespace Service.Specifications
         }
 
 
-        }
+    }
 }
