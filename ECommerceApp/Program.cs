@@ -1,4 +1,5 @@
 using DomainLayer.Contracts;
+using ECommerceApp.CustomMiddleWares;
 using Microsoft.EntityFrameworkCore;
 using Presistance.Data;
 using Presistance.Data.DataSeed;
@@ -54,9 +55,12 @@ namespace ECommerceApp
             await ObjectOfDataSeeding.DataSeedAsync();
 
             #endregion
-            
-                
+
+
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<CustomExeptionHandlerMiddleWare>();
+
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
