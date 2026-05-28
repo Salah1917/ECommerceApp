@@ -1,18 +1,37 @@
 ﻿using AutoMapper;
 using DomainLayer.Contracts;
+using Microsoft.Extensions.Configuration;
 using ServiceAbstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
-    public class ServiceManager(IUnitOfWork _unitOfWork, IMapper _mapper) : IServiceManager
+    public class ServiceManager : IServiceManager
     {
-        private readonly Lazy<IProductService> _LazyProductService = new Lazy<IProductService>(() => new ProductService(_unitOfWork, _mapper));
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly IBasketRepository _basketRepository;
 
-        public IProductService ProductService => _LazyProductService.Value;
+        private readonly Lazy<IProductService> _lazyProductService;
+        private readonly Lazy<IAuthService> _lazyAuthService;
+        private readonly Lazy<IOrderService> _lazyOrderService;
+        private readonly Lazy<IPaymentService> _lazyPaymentService;
+
+        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IBasketRepository basketRepository)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _configuration = configuration;
+            _basketRepository = basketRepository;
+            _lazyProductService = new Lazy<IProductService>(() => new ProductService(_unitOfWork, _mapper));
+            _lazyAuthService = new Lazy<IAuthService>(() => new AuthService(_configuration));
+            _lazyPaymentService = new Lazy<IPaymentService>(() => new PaymentService(_configuration, _basketRepository, _unitOfWork));
+            _lazyOrderService = new Lazy<IOrderService>(() => new OrderService(_basketRepository, _unitOfWork, _lazyPaymentService.Value));
+        }
+
+        public IProductService ProductService => _lazyProductService.Value;
+        public IAuthService AuthService => _lazyAuthService.Value;
+        public IOrderService OrderService => _lazyOrderService.Value;
+        public IPaymentService PaymentService => _lazyPaymentService.Value;
     }
 }
